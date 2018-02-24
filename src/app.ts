@@ -94,7 +94,8 @@ app.post("/logins", homeController.postLogin);
 app.post("/signUps", homeController.postSignUp);
 app.put("/updatePwd", homeController.postUpdatePwd);
 app.delete("/deletePwd", homeController.postDeletePwd);
-
+app.post("/onSearch", homeController.postOnSearch);
+app.post("/onAdd", homeController.postOnAdd);
 
 app.get("/login", userController.getLogin);
 app.post("/login", userController.postLogin);

@@ -121,7 +121,8 @@ export let postSignUp = (req: Request, res: Response, next: NextFunction) => {
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    num: req.body.num
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -175,6 +176,18 @@ export let postUpdatePwd = (req: Request, res: Response, next: NextFunction) => 
     // });
 
     /**
+     * 对指定值进行自增操作，负数为自减
+     */
+    // User.update({ _id: req.body.id }, { $inc: { num: 3 } }, error => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    //   User.find((err, data) => {
+    //     console.log(data);
+    //   });
+    // });
+
+    /**
      * 另一个修改保存的方法
      */
     user.password = req.body.password;
@@ -205,4 +218,42 @@ export let postDeletePwd = (req: Request, res: Response, next: NextFunction) => 
     resResult = resFormat.succeed({ message: "删除成功" });
     return res.send(resResult);
   });
+};
+
+export let postOnSearch = (req: Request, res: Response, next: NextFunction) => {
+  const errors = req.validationErrors();
+  const resFormat = new ResFormat();
+  let resResult: IRes;
+  if (errors) {
+    resResult = resFormat.failLevel0({ message: "错误" });
+    return res.send(errors);
+  }
+  const reg = new RegExp(req.body.email, "i"); // 模糊查询
+  User.find(
+    {
+      $or: [{ email: { $regex: reg } }] // 模糊查询
+    },
+    {},
+    {
+      sort: { email: -1 }, // 对email字段进行降序排序，1为升序排序
+      limit: 100
+    },
+    (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      resResult = resFormat.succeed({ message: "删除成功", data });
+      return res.send(resResult);
+    }
+  );
+};
+
+export let postOnAdd = (req: Request, res: Response, next: NextFunction) => {
+  const errors = req.validationErrors();
+  const resFormat = new ResFormat();
+  let resResult: IRes;
+  if (errors) {
+    resResult = resFormat.failLevel0({ message: "错误" });
+    return res.send(errors);
+  }
 };

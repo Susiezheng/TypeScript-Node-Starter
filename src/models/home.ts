@@ -5,6 +5,7 @@ import * as mongoose from "mongoose";
 export type UserModel = mongoose.Document & {
   email?: string;
   password?: string;
+  num?: number;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
 
@@ -68,6 +69,7 @@ const userSchema = new mongoose.Schema(
   {
     email: { type: String, unique: true },
     password: String,
+    num: Number,
     passwordResetToken: String,
     passwordResetExpires: Date,
 
